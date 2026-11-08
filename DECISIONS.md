@@ -4,6 +4,25 @@ Decisions taken during the build, in the programme's house form.
 Anything that changes how a run is executed is recorded here, before
 the runs it affects, with its reason.
 
+## D3: The Lambda execution role is created inside the emulator first
+
+Recorded after harness validation and before the scored run. The
+frozen behaviour file passes a placeholder role ARN pattern and
+notes that an emulator validating role existence is scored on that.
+Validation finding: moto 5.2.5 does validate. Creating a function
+with the literal placeholder ARN fails with
+InvalidParameterValueException, "The role defined for the function
+cannot be assumed by Lambda", which is also the documented AWS
+behaviour for a role that cannot be assumed, so on this point the
+emulator matches the service. Keeping the literal placeholder would
+collapse every Lambda row into that one setup fact and measure
+nothing about Lambda itself. The harness therefore creates the
+execution role through moto's IAM first (the documented setup step
+for CreateFunction) and passes the returned ARN to the Lambda rows.
+The placeholder string is never a working credential; it remains in
+src/factory.py only as the Context default and as an honesty marker.
+IAM itself is setup machinery and is not a scored service.
+
 ## D1: No LocalStack arm; moto is the only emulator under test
 
 Recorded before the pre-registration was locked. The brief allowed a
