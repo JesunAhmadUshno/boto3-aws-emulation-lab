@@ -1,0 +1,40 @@
+{
+ "per_service_counts": {
+  "lambda": {
+   "DIVERGES": 1,
+   "MATCHES": 4,
+   "TOTAL": 7,
+   "UNSUPPORTED": 2
+  },
+  "s3": {
+   "DIVERGES": 2,
+   "MATCHES": 10,
+   "TOTAL": 13,
+   "UNSUPPORTED": 1
+  },
+  "sqs": {
+   "MATCHES": 10,
+   "TOTAL": 10
+  }
+ },
+ "verdicts": {
+  "H1": "CONFIRMED",
+  "H2": "REFUTED",
+  "H3": "CONFIRMED",
+  "matches": 24,
+  "per_service_bad": {
+   "lambda": true,
+   "s3": true,
+   "sqs": false
+  },
+  "q02_status": "MATCHES",
+  "q04_status": "MATCHES",
+  "share_matches": 0.8,
+  "status_counts": {
+   "DIVERGES": 3,
+   "MATCHES": 24,
+   "UNSUPPORTED": 3
+  },
+  "total_rows": 30
+ }
+}

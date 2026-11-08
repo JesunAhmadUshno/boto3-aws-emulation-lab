@@ -1,0 +1,13 @@
+{
+ "claim_checked": "24 of 30 rows MATCHES (80.0 percent), H1 CONFIRMED, H2 REFUTED (all 10 SQS rows MATCHES), H3 CONFIRMED, per-service counts S3 10/2/1 of 13, SQS 10/0/0 of 10, Lambda 4/1/2 of 7, and the six named non-MATCHES rows",
+ "hand_verification": "Every figure in the claim was checked by hand against results/summary.json (script-generated from results/scores.json): MATCHES 24 of 30, share 0.8, verdicts H1 CONFIRMED, H2 REFUTED, H3 CONFIRMED, per-service counts S3 {MATCHES 10, DIVERGES 2, UNSUPPORTED 1, TOTAL 13}, SQS {MATCHES 10, TOTAL 10}, Lambda {MATCHES 4, DIVERGES 1, UNSUPPORTED 2, TOTAL 7}, and the non-MATCHES row list read directly from results/scores.json (S3-09, S3-10, L-05 DIVERGES; S3-12, L-02, L-03 UNSUPPORTED). All agree. Versions in the claim (boto3 1.43.126, moto 5.2.5) match results/versions.json.",
+ "model": "jev-1.13.0",
+ "noul": 0.31,
+ "question": "supported (noul): the headline claim is fully supported by the evidence, with no number, verdict or named row misstated",
+ "route": "REVIEW (band 0.10 to 0.85): hand-verified before publication",
+ "spec": "workspace/tools/jev/boto3-claim-spec-2026-11-08.json",
+ "usage": {
+  "input_tokens": 968,
+  "output_tokens": 20
+ }
+}

@@ -4,6 +4,44 @@ Decisions taken during the build, in the programme's house form.
 Anything that changes how a run is executed is recorded here, before
 the runs it affects, with its reason.
 
+## D5: Classification fixes after scored run 1 (S3-09, S3-12, L-02, L-03)
+
+The first scored run (2026-11-08) left three rows as ERROR and one
+row under-characterized. Each cause was established by a probe
+before any fix, and only the affected rows are rescored, per
+PREREGISTRATION.md Section 7. No expectation in BEHAVIOURS.md
+changes.
+
+- L-02 and L-03 (invoke): moto returns HTTP 200 with a payload that
+  is plain text, "error running docker: Error while fetching server
+  API version ... FileNotFoundError", because moto executes Lambda
+  zip functions through Docker and this machine has none (D1). The
+  functions never execute. The rows now detect that emulator error
+  text in the payload and score UNSUPPORTED with it quoted, which
+  is the outcome the pre-registration predicted for whatever moto
+  cannot execute.
+- S3-12 (S3 Select): the server answers the documented CAST query
+  with HTTP 500. An in-process probe shows why: moto's SQL parser
+  (py_partiql_parser) raises ValueError on the CAST where-clause.
+  The row now scores that refusal UNSUPPORTED with the error
+  quoted, instead of letting it escape as a harness ERROR.
+- S3-09 (presigned URL): scored DIVERGES in run 1 and stays
+  DIVERGES. The diff is now characterized in the record: boto3
+  signs presigned URLs for a custom endpoint with Signature
+  Version 2 style parameters (AWSAccessKeyId, Signature, Expires
+  as an epoch), not the SigV4 X-Amz parameters of the AWS
+  document, while the unsigned fetch of the URL returns the exact
+  object bytes. The row gains a note recording the observed
+  parameter names; no assertion changes.
+
+## D4: Subset reruns merge into results/scores.json
+
+scripts/rerun_rows.py runs named rows against a fresh server and
+replaces only their records in results/scores.json. Rows use unique
+resource names and a fresh server per run, so a subset rerun is the
+same measurement as the same rows in a full run, and untouched rows
+keep their original records byte for byte.
+
 ## D3: The Lambda execution role is created inside the emulator first
 
 Recorded after harness validation and before the scored run. The

@@ -178,6 +178,10 @@ def s3_09(ctx):
         "get_object", Params={"Bucket": bucket, "Key": "signed"}, ExpiresIn=600
     )
     query = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)
+    rec.note(
+        "observed URL query parameters: %s (DECISIONS.md D5)"
+        % ", ".join(sorted(query))
+    )
     rec.check("algorithm param", ["AWS4-HMAC-SHA256"], query.get("X-Amz-Algorithm"))
     rec.check("expires param", ["600"], query.get("X-Amz-Expires"))
     for param in ("X-Amz-Credential", "X-Amz-Date", "X-Amz-SignedHeaders", "X-Amz-Signature"):
@@ -238,6 +242,18 @@ def s3_12(ctx):
             InputSerialization={"CSV": {"FileHeaderInfo": "USE"}},
             OutputSerialization={"CSV": {}},
         )
+    except ClientError as exc:
+        # Server mode surfaces the emulator's internal parser
+        # failure as HTTP 500 (DECISIONS.md D5): the documented
+        # query cannot be executed, so the row is UNSUPPORTED with
+        # the error quoted.
+        code, status, text = err_info(exc)
+        rec.mark_unsupported("HTTP %s on SelectObjectContent: %s" % (status, text))
+        rec.note(
+            "probe evidence (DECISIONS.md D5): in-process, moto's SQL "
+            "parser raises ValueError on the CAST where-clause"
+        )
+        return rec
     except Exception as exc:
         if looks_unsupported(exc):
             rec.mark_unsupported("%s: %s" % (type(exc).__name__, exc))

@@ -39,11 +39,15 @@ def _create(ctx, handler, runtime="python3.12"):
 
 
 def _invoke(ctx, rec, name, payload):
-    """Invoke; an emulator refusal at this call marks the row
-    UNSUPPORTED and returns None."""
+    """Invoke and return (response, payload bytes). Returns None
+    after marking the row UNSUPPORTED when the emulator refuses the
+    call, or when the response payload is the emulator's own
+    execution-unavailable error text (DECISIONS.md D5: moto runs
+    Lambda zip functions through Docker, which this machine does
+    not have, and says so in the payload instead of executing)."""
     lam = ctx.clients["lambda"]
     try:
-        return lam.invoke(
+        resp = lam.invoke(
             FunctionName=name,
             InvocationType="RequestResponse",
             Payload=json.dumps(payload).encode("utf-8"),
@@ -53,6 +57,12 @@ def _invoke(ctx, rec, name, payload):
             rec.mark_unsupported("%s: %s" % (type(exc).__name__, exc))
             return None
         raise
+    payload_bytes = resp["Payload"].read()
+    text = payload_bytes.decode("utf-8", errors="replace")
+    if "error running docker" in text:
+        rec.mark_unsupported("invoke payload was the emulator error: %s" % text)
+        return None
+    return resp, payload_bytes
 
 
 def l_01(ctx):
@@ -69,13 +79,14 @@ def l_01(ctx):
 def l_02(ctx):
     rec = RowRecord("L-02", "lambda")
     name, _ = _create(ctx, "lambda_function.ok_handler")
-    resp = _invoke(ctx, rec, name, {"probe": "emulation"})
-    if resp is None:
+    out = _invoke(ctx, rec, name, {"probe": "emulation"})
+    if out is None:
         return rec
+    resp, payload_bytes = out
     status = resp["ResponseMetadata"]["HTTPStatusCode"]
     rec.check("invoke http status", 200, status)
     rec.check("no FunctionError", None, resp.get("FunctionError"))
-    payload = json.loads(resp["Payload"].read().decode("utf-8"))
+    payload = json.loads(payload_bytes.decode("utf-8"))
     rec.check("handler response", {"echo": {"probe": "emulation"}}, payload)
     return rec
 
@@ -83,13 +94,14 @@ def l_02(ctx):
 def l_03(ctx):
     rec = RowRecord("L-03", "lambda")
     name, _ = _create(ctx, "lambda_function.fail_handler")
-    resp = _invoke(ctx, rec, name, {"probe": "failure"})
-    if resp is None:
+    out = _invoke(ctx, rec, name, {"probe": "failure"})
+    if out is None:
         return rec
+    resp, payload_bytes = out
     status = resp["ResponseMetadata"]["HTTPStatusCode"]
     rec.check("invoke http status", 200, status)
     rec.check("FunctionError", "Handled", resp.get("FunctionError"))
-    payload = json.loads(resp["Payload"].read().decode("utf-8"))
+    payload = json.loads(payload_bytes.decode("utf-8"))
     rec.check("errorMessage", "boom-failure-marker", payload.get("errorMessage"))
     rec.check(
         "errorType names RuntimeError",

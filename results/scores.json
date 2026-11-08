@@ -1,0 +1,795 @@
+[
+ {
+  "id": "S3-01",
+  "service": "s3",
+  "assertions": [
+   {
+    "name": "put status",
+    "expected": "200",
+    "observed": "200",
+    "ok": true
+   },
+   {
+    "name": "get status",
+    "expected": "200",
+    "observed": "200",
+    "ok": true
+   },
+   {
+    "name": "byte equality",
+    "expected": "True",
+    "observed": "True",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "S3-02",
+  "service": "s3",
+  "assertions": [
+   {
+    "name": "content type",
+    "expected": "'text/plain; charset=utf-8'",
+    "observed": "'text/plain; charset=utf-8'",
+    "ok": true
+   },
+   {
+    "name": "user metadata",
+    "expected": "{'origin': 'emulation-lab', 'batch': '07'}",
+    "observed": "{'origin': 'emulation-lab', 'batch': '07'}",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "S3-03",
+  "service": "s3",
+  "assertions": [
+   {
+    "name": "tag set",
+    "expected": "[('team', 'research'), ('tier', 'lab')]",
+    "observed": "[('team', 'research'), ('tier', 'lab')]",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "S3-04",
+  "service": "s3",
+  "assertions": [
+   {
+    "name": "versioning status",
+    "expected": "'Enabled'",
+    "observed": "'Enabled'",
+    "ok": true
+   },
+   {
+    "name": "distinct version ids",
+    "expected": "True",
+    "observed": "True",
+    "ok": true
+   },
+   {
+    "name": "version 1 body",
+    "expected": "b'first-body'",
+    "observed": "b'first-body'",
+    "ok": true
+   },
+   {
+    "name": "version 2 body",
+    "expected": "b'second-body'",
+    "observed": "b'second-body'",
+    "ok": true
+   },
+   {
+    "name": "plain get returns latest",
+    "expected": "b'second-body'",
+    "observed": "b'second-body'",
+    "ok": true
+   },
+   {
+    "name": "listed version ids",
+    "expected": "['c7896e29-5945-4b0d-9b82-a8da7d3959b9', 'de63163c-8ef5-4fd7-8195-90819d454914']",
+    "observed": "['c7896e29-5945-4b0d-9b82-a8da7d3959b9', 'de63163c-8ef5-4fd7-8195-90819d454914']",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "S3-05",
+  "service": "s3",
+  "assertions": [
+   {
+    "name": "error code",
+    "expected": "'NoSuchVersion'",
+    "observed": "'NoSuchVersion'",
+    "ok": true
+   }
+  ],
+  "notes": [
+   "http status observed: 404"
+  ],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "S3-06",
+  "service": "s3",
+  "assertions": [
+   {
+    "name": "missing bucket code",
+    "expected": "'NoSuchBucket'",
+    "observed": "'NoSuchBucket'",
+    "ok": true
+   },
+   {
+    "name": "missing bucket status",
+    "expected": "404",
+    "observed": "404",
+    "ok": true
+   },
+   {
+    "name": "missing key code",
+    "expected": "'NoSuchKey'",
+    "observed": "'NoSuchKey'",
+    "ok": true
+   },
+   {
+    "name": "missing key status",
+    "expected": "404",
+    "observed": "404",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "S3-07",
+  "service": "s3",
+  "assertions": [
+   {
+    "name": "delete status",
+    "expected": "204",
+    "observed": "204",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "S3-08",
+  "service": "s3",
+  "assertions": [
+   {
+    "name": "all keys returned",
+    "expected": "['obj-00', 'obj-01', 'obj-02', 'obj-03', 'obj-04', 'obj-05', 'obj-06', 'obj-07', 'obj-08', 'obj-09', 'obj-10', 'obj-11', 'obj-12', 'obj-13', 'obj-14', 'obj-15', 'obj-16', 'obj-17', 'obj-18', 'obj-19', 'obj-20', 'obj-21', 'obj-22', 'obj-23', 'obj-24']",
+    "observed": "['obj-00', 'obj-01', 'obj-02', 'obj-03', 'obj-04', 'obj-05', 'obj-06', 'obj-07', 'obj-08', 'obj-09', 'obj-10', 'obj-11', 'obj-12', 'obj-13', 'obj-14', 'obj-15', 'obj-16', 'obj-17', 'obj-18', 'obj-19', 'obj-20', 'obj-21', 'obj-22', 'obj-23', 'obj-24']",
+    "ok": true
+   },
+   {
+    "name": "no duplicates",
+    "expected": "25",
+    "observed": "25",
+    "ok": true
+   },
+   {
+    "name": "truncation flags (3 pages)",
+    "expected": "[True, True, False]",
+    "observed": "[True, True, False]",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "S3-09",
+  "service": "s3",
+  "assertions": [
+   {
+    "name": "algorithm param",
+    "expected": "['AWS4-HMAC-SHA256']",
+    "observed": "None",
+    "ok": false
+   },
+   {
+    "name": "expires param",
+    "expected": "['600']",
+    "observed": "None",
+    "ok": false
+   },
+   {
+    "name": "param present: X-Amz-Credential",
+    "expected": "True",
+    "observed": "False",
+    "ok": false
+   },
+   {
+    "name": "param present: X-Amz-Date",
+    "expected": "True",
+    "observed": "False",
+    "ok": false
+   },
+   {
+    "name": "param present: X-Amz-SignedHeaders",
+    "expected": "True",
+    "observed": "False",
+    "ok": false
+   },
+   {
+    "name": "param present: X-Amz-Signature",
+    "expected": "True",
+    "observed": "False",
+    "ok": false
+   },
+   {
+    "name": "unsigned fetch status",
+    "expected": "200",
+    "observed": "200",
+    "ok": true
+   },
+   {
+    "name": "unsigned fetch bytes",
+    "expected": "b'presigned-body'",
+    "observed": "b'presigned-body'",
+    "ok": true
+   }
+  ],
+  "notes": [
+   "observed URL query parameters: AWSAccessKeyId, Expires, Signature (DECISIONS.md D5)"
+  ],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "DIVERGES"
+ },
+ {
+  "id": "S3-10",
+  "service": "s3",
+  "assertions": [
+   {
+    "name": "bad digest rejected",
+    "expected": "'ClientError'",
+    "observed": "'no error'",
+    "ok": false
+   },
+   {
+    "name": "nothing stored",
+    "expected": "'NoSuchKey'",
+    "observed": "'object readable'",
+    "ok": false
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "DIVERGES"
+ },
+ {
+  "id": "S3-11",
+  "service": "s3",
+  "assertions": [
+   {
+    "name": "range status",
+    "expected": "206",
+    "observed": "206",
+    "ok": true
+   },
+   {
+    "name": "content range",
+    "expected": "'bytes 2-5/11'",
+    "observed": "'bytes 2-5/11'",
+    "ok": true
+   },
+   {
+    "name": "range bytes",
+    "expected": "b'2345'",
+    "observed": "b'2345'",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "S3-12",
+  "service": "s3",
+  "assertions": [],
+  "notes": [
+   "probe evidence (DECISIONS.md D5): in-process, moto's SQL parser raises ValueError on the CAST where-clause"
+  ],
+  "unsupported_text": "HTTP 500 on SelectObjectContent: An error occurred (500) when calling the SelectObjectContent operation (reached max retries: 1): Internal Server Error",
+  "harness_error": null,
+  "status": "UNSUPPORTED"
+ },
+ {
+  "id": "Q-01",
+  "service": "sqs",
+  "assertions": [
+   {
+    "name": "body md5",
+    "expected": "'28364c52eda4a87f90945c3820cd7b15'",
+    "observed": "'28364c52eda4a87f90945c3820cd7b15'",
+    "ok": true
+   },
+   {
+    "name": "one message",
+    "expected": "1",
+    "observed": "1",
+    "ok": true
+   },
+   {
+    "name": "body intact",
+    "expected": "'round-trip body'",
+    "observed": "'round-trip body'",
+    "ok": true
+   },
+   {
+    "name": "empty after delete",
+    "expected": "0",
+    "observed": "0",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "Q-02",
+  "service": "sqs",
+  "assertions": [
+   {
+    "name": "first receive",
+    "expected": "1",
+    "observed": "1",
+    "ok": true
+   },
+   {
+    "name": "hidden while in flight",
+    "expected": "0",
+    "observed": "0",
+    "ok": true
+   },
+   {
+    "name": "revealed after timeout",
+    "expected": "1",
+    "observed": "1",
+    "ok": true
+   },
+   {
+    "name": "same message id",
+    "expected": "'2a9d4318-4aa1-4597-9347-754d01e5fe62'",
+    "observed": "'2a9d4318-4aa1-4597-9347-754d01e5fe62'",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "Q-03",
+  "service": "sqs",
+  "assertions": [
+   {
+    "name": "first receive",
+    "expected": "1",
+    "observed": "1",
+    "ok": true
+   },
+   {
+    "name": "visible again at once",
+    "expected": "1",
+    "observed": "1",
+    "ok": true
+   },
+   {
+    "name": "same message id",
+    "expected": "'a2eea46f-959d-4a4b-a7e4-0804a5d49569'",
+    "observed": "'a2eea46f-959d-4a4b-a7e4-0804a5d49569'",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "Q-04",
+  "service": "sqs",
+  "assertions": [
+   {
+    "name": "source drained",
+    "expected": "0",
+    "observed": "0",
+    "ok": true
+   },
+   {
+    "name": "message in dlq",
+    "expected": "1",
+    "observed": "1",
+    "ok": true
+   },
+   {
+    "name": "dlq body intact",
+    "expected": "'redrive probe'",
+    "observed": "'redrive probe'",
+    "ok": true
+   }
+  ],
+  "notes": [
+   "source receives before the message moved: 2"
+  ],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "Q-05",
+  "service": "sqs",
+  "assertions": [
+   {
+    "name": "no message on empty queue",
+    "expected": "0",
+    "observed": "0",
+    "ok": true
+   },
+   {
+    "name": "long poll waits at least 4.0 s",
+    "expected": ">= 4.0 s elapsed",
+    "observed": "5.01 s elapsed",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "Q-06",
+  "service": "sqs",
+  "assertions": [
+   {
+    "name": "both sends accepted",
+    "expected": "True",
+    "observed": "True",
+    "ok": true
+   },
+   {
+    "name": "body delivered exactly once",
+    "expected": "1",
+    "observed": "1",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "Q-07",
+  "service": "sqs",
+  "assertions": [
+   {
+    "name": "group order preserved",
+    "expected": "['first', 'second', 'third']",
+    "observed": "['first', 'second', 'third']",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "Q-08",
+  "service": "sqs",
+  "assertions": [
+   {
+    "name": "error code",
+    "expected": "'AWS.SimpleQueueService.NonExistentQueue'",
+    "observed": "'AWS.SimpleQueueService.NonExistentQueue'",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "Q-09",
+  "service": "sqs",
+  "assertions": [
+   {
+    "name": "attribute md5 (documented algorithm)",
+    "expected": "'b9925be3517afa350ae057d8f9e04528'",
+    "observed": "'b9925be3517afa350ae057d8f9e04528'",
+    "ok": true
+   },
+   {
+    "name": "one message",
+    "expected": "1",
+    "observed": "1",
+    "ok": true
+   },
+   {
+    "name": "attribute kind value",
+    "expected": "'lab'",
+    "observed": "'lab'",
+    "ok": true
+   },
+   {
+    "name": "attribute kind type",
+    "expected": "'String'",
+    "observed": "'String'",
+    "ok": true
+   },
+   {
+    "name": "attribute count value",
+    "expected": "'42'",
+    "observed": "'42'",
+    "ok": true
+   },
+   {
+    "name": "attribute count type",
+    "expected": "'Number'",
+    "observed": "'Number'",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "F-01",
+  "service": "sqs",
+  "assertions": [
+   {
+    "name": "received exactly 3 times before moving",
+    "expected": "3",
+    "observed": "3",
+    "ok": true
+   },
+   {
+    "name": "source drained",
+    "expected": "0",
+    "observed": "0",
+    "ok": true
+   },
+   {
+    "name": "message in dlq",
+    "expected": "1",
+    "observed": "1",
+    "ok": true
+   },
+   {
+    "name": "dlq body intact",
+    "expected": "'poison probe'",
+    "observed": "'poison probe'",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "L-01",
+  "service": "lambda",
+  "assertions": [
+   {
+    "name": "function name",
+    "expected": "'emu-5d8bf5e633'",
+    "observed": "'emu-5d8bf5e633'",
+    "ok": true
+   },
+   {
+    "name": "runtime",
+    "expected": "'python3.12'",
+    "observed": "'python3.12'",
+    "ok": true
+   },
+   {
+    "name": "handler",
+    "expected": "'lambda_function.ok_handler'",
+    "observed": "'lambda_function.ok_handler'",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "L-02",
+  "service": "lambda",
+  "assertions": [],
+  "notes": [],
+  "unsupported_text": "invoke payload was the emulator error: error running docker: Error while fetching server API version: ('Connection aborted.', FileNotFoundError(2, 'No such file or directory'))",
+  "harness_error": null,
+  "status": "UNSUPPORTED"
+ },
+ {
+  "id": "L-03",
+  "service": "lambda",
+  "assertions": [],
+  "notes": [],
+  "unsupported_text": "invoke payload was the emulator error: error running docker: Error while fetching server API version: ('Connection aborted.', FileNotFoundError(2, 'No such file or directory'))",
+  "harness_error": null,
+  "status": "UNSUPPORTED"
+ },
+ {
+  "id": "L-04",
+  "service": "lambda",
+  "assertions": [
+   {
+    "name": "error code",
+    "expected": "'ResourceNotFoundException'",
+    "observed": "'ResourceNotFoundException'",
+    "ok": true
+   },
+   {
+    "name": "http status",
+    "expected": "404",
+    "observed": "404",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "L-05",
+  "service": "lambda",
+  "assertions": [
+   {
+    "name": "invalid runtime rejected",
+    "expected": "'ClientError'",
+    "observed": "'no error'",
+    "ok": false
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "DIVERGES"
+ },
+ {
+  "id": "L-06",
+  "service": "lambda",
+  "assertions": [
+   {
+    "name": "reserved concurrency",
+    "expected": "3",
+    "observed": "3",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "L-07",
+  "service": "lambda",
+  "assertions": [
+   {
+    "name": "error code",
+    "expected": "'ResourceNotFoundException'",
+    "observed": "'ResourceNotFoundException'",
+    "ok": true
+   },
+   {
+    "name": "absent from list_functions",
+    "expected": "False",
+    "observed": "False",
+    "ok": true
+   }
+  ],
+  "notes": [],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "F-02",
+  "service": "s3",
+  "assertions": [
+   {
+    "name": "writer A version body",
+    "expected": "b'alpha'",
+    "observed": "b'alpha'",
+    "ok": true
+   },
+   {
+    "name": "writer B version body",
+    "expected": "b'beta'",
+    "observed": "b'beta'",
+    "ok": true
+   },
+   {
+    "name": "plain get returns latest writer",
+    "expected": "b'beta'",
+    "observed": "b'beta'",
+    "ok": true
+   },
+   {
+    "name": "delete marker created",
+    "expected": "True",
+    "observed": "True",
+    "ok": true
+   },
+   {
+    "name": "plain get after delete marker: status",
+    "expected": "404",
+    "observed": "404",
+    "ok": true
+   },
+   {
+    "name": "delete marker listed",
+    "expected": "1",
+    "observed": "1",
+    "ok": true
+   },
+   {
+    "name": "listed marker id matches delete response",
+    "expected": "'2b561122-fed2-4f63-b892-cfe31f6714ec'",
+    "observed": "'2b561122-fed2-4f63-b892-cfe31f6714ec'",
+    "ok": true
+   },
+   {
+    "name": "plain get restored after marker removal",
+    "expected": "b'beta'",
+    "observed": "b'beta'",
+    "ok": true
+   }
+  ],
+  "notes": [
+   "error code observed: NoSuchKey"
+  ],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ }
+]
