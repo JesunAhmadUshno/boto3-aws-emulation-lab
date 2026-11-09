@@ -6,6 +6,11 @@ Versions follow Semantic Versioning; no release is tagged yet.
 ## [Unreleased]
 
 ### Changed
+- 2026-11-08: Review fixes (DECISIONS.md D7). README headline names
+  the Docker-less host and the two Lambda rows it makes UNSUPPORTED.
+  RESULTS.md notes the rerun on the four rescored rows (generator
+  change). scripts/rerun_rows.py keeps replaced records in
+  results/replaced-records.json and notes each rerun on the row.
 - 2026-11-08: Adopted the portfolio standard v2. README opens with the
   question, headline, field, job family and verdict (Functional),
   then reproduce, lifecycle and layout. AUDIT.md is the report; its

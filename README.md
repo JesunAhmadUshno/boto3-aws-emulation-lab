@@ -6,8 +6,11 @@ engineer uses, which documented behaviours does moto reproduce
 exactly, which does it diverge on, and which does it not support?
 
 **Headline.** 24 of 30 frozen behaviours (80.0 percent) matched AWS's
-documentation on moto 5.2.5: H1 CONFIRMED, H2 REFUTED (all 10 SQS
-rows matched), H3 CONFIRMED. The 30 rows are the whole frozen list,
+documentation on moto 5.2.5, run on a host without Docker: H1
+CONFIRMED, H2 REFUTED (all 10 SQS rows matched), H3 CONFIRMED. Two of
+the six misses, the Lambda invoke rows L-02 and L-03, are UNSUPPORTED
+because that host has no Docker, not because of moto's semantics; the
+other four are moto's own. The 30 rows are the whole frozen list,
 each run once, not a sample, so no sampling interval applies; the six
 misses are named below and in RESULTS.md.
 
@@ -67,7 +70,7 @@ There is no site/: no dashboard is built for this study.
 | BEHAVIOURS.md | proposal (baseline) | The 30 frozen behaviours with cited AWS documents; pinned by the same test |
 | AUDIT.md | report | Verdict, claim check, how the evidence is protected, threats to validity |
 | RESULTS.md | results | Generated verdicts and the full scored table |
-| DECISIONS.md | decisions | D1 to D6, including the dropped LocalStack arm and the post-run classification fixes |
+| DECISIONS.md | decisions | D1 to D7, including the dropped LocalStack arm and the post-run classification fixes |
 | results/scores.json, results/versions.json | evidence | Raw per-row records and the environment of the scored run |
 | results/summary.json | results | Verdicts and counts, generated from scores.json |
 | results/jev-claim-check.json | evidence | The headline claim screen and its hand verification |

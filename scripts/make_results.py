@@ -10,6 +10,12 @@ from collections import Counter, defaultdict
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TOTAL_ROWS = 30
 SERVICES = ("s3", "sqs", "lambda")
+# Rows rescored by scripts/rerun_rows.py before that script kept the
+# replaced record and noted the rerun itself (DECISIONS.md D5, D7).
+# PREREGISTRATION.md Section 5 asks that a rerun be noted on the row;
+# for these four the note is added here, at render time, so the raw
+# records stay as recorded. Value: the row's run-1 status.
+EARLY_RERUNS = {"S3-09": "DIVERGES", "S3-12": "ERROR", "L-02": "ERROR", "L-03": "ERROR"}
 
 
 def load_records():
@@ -163,6 +169,13 @@ def render(records, verdict):
             )
         for note in rec["notes"]:
             lines.append("- note: %s" % note)
+        if rec["id"] in EARLY_RERUNS and not any(n.startswith("rerun:") for n in rec["notes"]):
+            lines.append(
+                "- rerun: rescored once by scripts/rerun_rows.py after scored run 1 "
+                "(DECISIONS.md D5); run 1 scored this row %s; the run-1 record was "
+                "overwritten and is not kept in the repository (DECISIONS.md D7)"
+                % EARLY_RERUNS[rec["id"]]
+            )
         lines.append("")
     return "\n".join(lines) + "\n"
 

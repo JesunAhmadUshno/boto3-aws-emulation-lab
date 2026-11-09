@@ -113,3 +113,24 @@ Recorded after the results; changes no row, expectation or verdict.
 - Field profile declared: Systems and infrastructure, reliability.
   The study does not meet that profile's items (no recovery targets,
   drills, monitoring or runbook), so the verdict is Functional.
+
+## D7: Review fixes (2026-11-08, after the results)
+
+Recorded after an independent review; changes no row, expectation or
+verdict.
+
+- The README headline now says the run was on a host without Docker
+  and that L-02 and L-03 are UNSUPPORTED for that reason. The
+  reviewer reported that a rerun on a Docker host scored both
+  MATCHES (26 of 30). That is a separate, unscored measurement on
+  another machine; the scored record stays the htch-runtime run.
+- The run-1 records for S3-09, S3-12, L-02 and L-03 were never
+  committed (results/ first appears in 624027e, after the reruns), so
+  they cannot be restored. scripts/make_results.py now adds the rerun
+  note Section 5 asks for to all four rows in RESULTS.md, with each
+  row's run-1 status (S3-09 DIVERGES, the others ERROR, per D5),
+  leaving results/scores.json as recorded.
+- scripts/rerun_rows.py now appends every record it replaces, dated,
+  to results/replaced-records.json and adds a "rerun:" note to the new
+  record, so a future rerun cannot overwrite evidence. Its docstring
+  now cites Section 5, the correct section (D6).

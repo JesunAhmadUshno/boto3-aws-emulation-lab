@@ -90,7 +90,10 @@ The limits of this study, stated so a reader can weigh every verdict.
   measured and found wrong. On a Docker host those rows might
   match, diverge, or fail differently, and this study cannot say
   which. Two of the seven Lambda rows therefore carry less
-  information than the design intended.
+  information than the design intended. An independent reviewer's
+  rerun on a Docker host reported MATCHES for both (26 of 30); that
+  is a separate measurement on another machine, not part of the
+  scored record, and it changes no verdict here (DECISIONS.md D7).
 - **One emulator only.** The LocalStack arm was dropped
   (D1), so every claim in this study is a claim about moto 5.2.5,
   while the research question says "a local emulator". The README
@@ -134,7 +137,12 @@ The limits of this study, stated so a reader can weigh every verdict.
   but the run-1 records themselves were overwritten in
   results/scores.json and are not kept in the repository, and the
   rerun is not noted on the L-02 and L-03 records as Section 5 of
-  the pre-registration asks (DECISIONS.md D6).
+  the pre-registration asks (DECISIONS.md D6). The run-1 records
+  were never committed, so they cannot be recovered from history.
+  Since 2026-11-08 the generator adds the rerun note, with each
+  row's run-1 status, to all four rows in RESULTS.md, and
+  scripts/rerun_rows.py keeps every record it replaces in
+  results/replaced-records.json (DECISIONS.md D7).
 - **Ordering is proven by commit and push order, not by
   timestamps on the evidence.** The four commits were pushed to
   GitHub at 21:00:11, 21:00:53, 21:05:03 and 21:07:46 UTC on
