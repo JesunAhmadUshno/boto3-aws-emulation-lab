@@ -87,3 +87,29 @@ surface, so the study goes through real HTTP on loopback rather
 than through botocore's transport interception. No connection ever
 leaves the loopback interface: the guard test in tests/ asserts the
 endpoint host of every client the factory creates.
+
+## D6: Portfolio standard v2 adopted (2026-11-08, after the results)
+
+Recorded after the results; changes no row, expectation or verdict.
+
+- The README opens with the standard's abstract, lifecycle and a
+  layout table. Locked file names stay: PREREGISTRATION.md is the
+  proposal, AUDIT.md the report, RESULTS.md the results, this file
+  the decisions, results/scores.json and results/versions.json the
+  raw evidence.
+- The lock is the root commit 2b2659d (tag proposal-v1).
+  tests/test_layout.py pins the SHA-256 of PREREGISTRATION.md as
+  committed there and of BEHAVIOURS.md as committed in 28bfcf2.
+- AUDIT.md's grade section left the public repo (grades are
+  internal). Its itemized limits stay in AUDIT.md as threats to
+  validity, without point values.
+- Two record-keeping gaps found while adopting the standard, kept
+  as found rather than edited into the evidence: D5 and
+  scripts/rerun_rows.py cite "PREREGISTRATION.md Section 7" for the
+  rerun policy, which is Section 5; and Section 5 asks that a rerun
+  be noted on the row, which the S3-09 and S3-12 records do (their
+  notes cite D5) but the L-02 and L-03 records do not. D5 is the
+  note for all four rows.
+- Field profile declared: Systems and infrastructure, reliability.
+  The study does not meet that profile's items (no recovery targets,
+  drills, monitoring or runbook), so the verdict is Functional.

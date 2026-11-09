@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "boto3-aws-emulation-lab: how far boto3 evidence from a local AWS emulator (moto) can be trusted, a pre-registered conformance study"
+authors:
+  - family-names: Ushno
+    given-names: Jesun Ahmad
+repository-code: "https://github.com/JesunAhmadUshno/boto3-aws-emulation-lab"
+license: Apache-2.0
+date-released: 2026-11-08

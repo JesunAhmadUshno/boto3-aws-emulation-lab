@@ -1,5 +1,83 @@
 # boto3 AWS Emulation Lab
 
+**Question.** How far can boto3 evidence gathered against a local
+emulator be trusted: across the S3, SQS and Lambda patterns a working
+engineer uses, which documented behaviours does moto reproduce
+exactly, which does it diverge on, and which does it not support?
+
+**Headline.** 24 of 30 frozen behaviours (80.0 percent) matched AWS's
+documentation on moto 5.2.5: H1 CONFIRMED, H2 REFUTED (all 10 SQS
+rows matched), H3 CONFIRMED. The 30 rows are the whole frozen list,
+each run once, not a sample, so no sampling interval applies; the six
+misses are named below and in RESULTS.md.
+
+**Field.** Systems and infrastructure, reliability. **Job family.**
+Cloud and platform engineering.
+
+**Verdict.** Functional. Tests pass in CI on Python 3.11 and 3.12,
+the scored run is one documented command, and all 30 rows ran end to
+end against a live moto server, with the raw records in
+results/scores.json. PREREGISTRATION.md was locked as the root commit
+(2b2659d, tag proposal-v1) before any code or result. Not Evaluated:
+the reliability profile's recovery targets, timed drills, monitoring
+and runbook do not apply to a conformance study and are not met
+(AUDIT.md).
+
+## Reproduce
+
+```sh
+python -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/python -m pytest tests/ -q                                       # checks: guard, scoring, layout, smoke
+.venv/bin/python scripts/run_study.py && .venv/bin/python scripts/make_results.py   # the scored run, one command
+.venv/bin/python scripts/make_results.py && git diff --exit-code RESULTS.md results/summary.json   # results regenerate from the records
+```
+
+The scored run takes about half a minute (several rows wait out
+real visibility timeouts). Every client is built by
+src/factory.py, which forces the endpoint to 127.0.0.1 and uses
+obviously fake placeholder strings as the signing credentials
+inside the test process only; tests/test_guard.py fails if a
+client ever points anywhere else. The scored run overwrites
+results/scores.json and results/versions.json; the committed records
+are the run on the machine of record, htch-runtime (no Docker), so a
+run elsewhere is a new measurement, not the recorded one.
+
+## Lifecycle
+
+- Question: DONE 2026-11-08
+- Proposal: DONE 2026-11-08 (PREREGISTRATION.md, commit 2b2659d)
+- Baseline: DONE 2026-11-08 (BEHAVIOURS.md: the 30 documented expectations, commit 28bfcf2)
+- Build: DONE 2026-11-08
+- Evaluate: PARTIAL 2026-11-08 (scored run done; reliability profile not met)
+- Report: DONE 2026-11-08 (AUDIT.md, RESULTS.md)
+- Review: OPEN
+- Release: OPEN
+
+## Layout
+
+Files named in the locked PREREGISTRATION.md keep their names; the
+second column gives the role each plays in the portfolio standard.
+There is no experiments/ folder: the raw evidence is
+results/scores.json and results/versions.json, named by the lock.
+There is no site/: no dashboard is built for this study.
+
+| Path | Role | What it holds |
+| --- | --- | --- |
+| PREREGISTRATION.md | proposal | Frozen design, hypotheses, scoring rules (tag proposal-v1); a test fails if one byte changes |
+| BEHAVIOURS.md | proposal (baseline) | The 30 frozen behaviours with cited AWS documents; pinned by the same test |
+| AUDIT.md | report | Verdict, claim check, how the evidence is protected, threats to validity |
+| RESULTS.md | results | Generated verdicts and the full scored table |
+| DECISIONS.md | decisions | D1 to D6, including the dropped LocalStack arm and the post-run classification fixes |
+| results/scores.json, results/versions.json | evidence | Raw per-row records and the environment of the scored run |
+| results/summary.json | results | Verdicts and counts, generated from scores.json |
+| results/jev-claim-check.json | evidence | The headline claim screen and its hand verification |
+| src/ | code | Client factory and loopback guard, row implementations, runner |
+| scripts/ | code | The scored run, subset reruns, results generator |
+| tests/ | tests | Guard, scoring rules, smoke rows, layout and lock |
+| CHANGELOG.md, CITATION.cff, SECURITY.md, LICENSES.md | project | Changes, citation, security policy, component licences |
+
+Licence: Apache-2.0 (LICENSE). Component provenance: LICENSES.md.
+
 This is an emulation study: every measurement was taken against a local moto server on one machine, and no real AWS account, credential or network endpoint was touched at any point.
 
 ## Research question
@@ -99,35 +177,3 @@ container runtime the test machine may not have). Knowing which
 is which is the difference between a test suite and a
 superstition: the suite tells you what your code does; the
 superstition tells you what you hoped.
-
-## Reproduce
-
-```sh
-python -m venv .venv
-.venv/bin/pip install -r requirements.txt
-.venv/bin/python -m pytest tests/ -q      # guard, scoring, smoke (fast)
-.venv/bin/python scripts/run_study.py     # the scored run: fresh server, 30 rows
-.venv/bin/python scripts/make_results.py  # RESULTS.md and results/summary.json
-```
-
-The scored run takes about half a minute (several rows wait out
-real visibility timeouts). Every client is built by
-src/factory.py, which forces the endpoint to 127.0.0.1 and uses
-obviously fake placeholder strings as the signing credentials
-inside the test process only; tests/test_guard.py fails if a
-client ever points anywhere else.
-
-## Layout
-
-- `PREREGISTRATION.md`: frozen design, hypotheses, scoring rules.
-- `BEHAVIOURS.md`: the 30 frozen behaviours with cited documents.
-- `RESULTS.md`: generated verdicts and the full scored table.
-- `AUDIT.md`: honest self-audit, graded out of 10,000.
-- `DECISIONS.md`: D1 to D5, including the dropped LocalStack arm
-  and the post-run classification fixes.
-- `src/`: client factory and guard, row implementations, runner.
-- `scripts/`: the scored run, subset reruns, results generator.
-- `results/`: raw per-row records (scores.json), versions,
-  summary, and the Jev claim check.
-
-Licence: Apache-2.0 (LICENSE). Component provenance: LICENSES.md.
