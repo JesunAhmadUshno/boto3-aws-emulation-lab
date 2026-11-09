@@ -96,3 +96,22 @@ def test_attribute_md5_oracle_properties():
 def test_body_md5_known_vector():
     # MD5 of the empty string is a fixed public constant.
     assert md5_hex_of_body("") == "d41d8cd98f00b204e9800998ecf8427e"
+
+
+def test_rerun_keeps_replaced_record_and_notes_the_rerun():
+    from scripts.rerun_rows import merge
+    old = [_record("Q-01", "sqs", "MATCHES"), _record("L-02", "lambda", "ERROR")]
+    new = _record("L-02", "lambda", "UNSUPPORTED")
+    merged, replaced = merge(old, {"L-02": new}, [], "2026-01-01")
+    assert merged[0] == old[0]
+    assert merged[1]["status"] == "UNSUPPORTED"
+    assert any(n.startswith("rerun: 2026-01-01") for n in merged[1]["notes"])
+    assert replaced == [{"replaced_on": "2026-01-01", "record": old[1]}]
+
+
+def test_generator_notes_the_early_reruns():
+    from scripts.make_results import render, verdicts
+    recs = [_record("L-02", "lambda", "UNSUPPORTED"), _record("Q-01", "sqs", "MATCHES")]
+    out = render(recs, dict(verdicts(recs), per_service_bad={"s3": 0, "sqs": 0, "lambda": 1}))
+    assert "run 1 scored this row ERROR" in out
+    assert out.count("- rerun:") == 1
