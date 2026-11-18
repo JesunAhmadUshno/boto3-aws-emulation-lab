@@ -1,0 +1,26 @@
+[
+ {
+  "replaced_on": "2026-11-18",
+  "record": {
+   "id": "L-02",
+   "service": "lambda",
+   "assertions": [],
+   "notes": [],
+   "unsupported_text": "invoke payload was the emulator error: error running docker: Error while fetching server API version: ('Connection aborted.', FileNotFoundError(2, 'No such file or directory'))",
+   "harness_error": null,
+   "status": "UNSUPPORTED"
+  }
+ },
+ {
+  "replaced_on": "2026-11-18",
+  "record": {
+   "id": "L-03",
+   "service": "lambda",
+   "assertions": [],
+   "notes": [],
+   "unsupported_text": "invoke payload was the emulator error: error running docker: Error while fetching server API version: ('Connection aborted.', FileNotFoundError(2, 'No such file or directory'))",
+   "harness_error": null,
+   "status": "UNSUPPORTED"
+  }
+ }
+]

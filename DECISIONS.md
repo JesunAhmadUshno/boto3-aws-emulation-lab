@@ -134,3 +134,62 @@ verdict.
   to results/replaced-records.json and adds a "rerun:" note to the new
   record, so a future rerun cannot overwrite evidence. Its docstring
   now cites Section 5, the correct section (D6).
+
+## D8: Gap-closure rerun of the Lambda rows on a Docker host (registered 2026-11-18, before the run)
+
+Rows L-02 and L-03 scored UNSUPPORTED in the committed run because moto
+5.2.5 executes Lambda invocations in a container and no Docker host was
+available on the machines the study ran on. This amendment registers a
+rerun of rows L-02 and L-03, plus a full-suite cross-check (all 30
+rows), on the Dell PowerEdge R610 (Ubuntu 24.04, Docker 29.1.3, Python
+3.12.3), under the gap-closure orders of 2026-11-17 and 2026-11-18.
+
+Machine history, stated once so the copies do not diverge silently: the
+rerun was first planned on BlackBoxV2 and registered there as D6 in
+that working copy; when BlackBoxV2 became unreachable it was
+re-registered on BlackBoxV3 in a main-tarball copy (also as that copy
+next entry); neither machine could run it (V2 offline, V3 has no
+container runtime). It is executed here. Same plan, no content change.
+
+Plan. The Lambda runtime image moto requests
+(ghcr.io/shogo82148/lambda-python:3.12) is pulled before any scoring
+and the pull is confirmed complete. Rows run through the repo own
+scripts (scripts/rerun_rows.py L-02 L-03, then scripts/run_study.py for
+the full suite) in a venv built from requirements.txt (boto3/botocore
+1.43.126, moto[server] 5.2.5, pytest 9.2.0). Frozen protection:
+results/scores.json is snapshotted before the runs; the fresh records
+are written to new files (results/r610_2026-11-18_lambda_rows.json and
+results/r610_2026-11-18_full_suite.json) and the committed scores.json
+is restored byte-identical afterwards. Fresh verdicts are reported
+beside the committed ones in the outcome entry; the run itself edits no
+committed verdict.
+
+D8 addendum (2026-11-18, before the run): the fresh clone requirements.txt
+carries a post-study dependabot bump (bb490a7) to boto3/botocore 1.44.2.
+The rerun installs the environment of record explicitly
+(boto3==1.43.126, botocore==1.43.126, moto[server]==5.2.5,
+pytest==9.2.0), so the fresh verdicts are comparable to the committed
+ones; the clone requirements.txt itself is not edited. Host Python is
+3.12.3; the venv was bootstrapped with get-pip.py because the host has
+no ensurepip (python3.12-venv absent), which changes nothing about the
+environment inside the venv.
+
+D8 outcome (2026-11-18): executed on the R610 as registered. The Lambda
+runtime image (ghcr.io/shogo82148/lambda-python:3.12, 1.2 GB) was
+pulled and confirmed before scoring. Environment: Python 3.12.3,
+boto3/botocore 1.43.126, moto 5.2.5, pytest 9.2.0 (repo tests 16
+passed). Rows L-02 and L-03, rerun through scripts/rerun_rows.py on the
+Docker host, both score MATCHES (fresh records:
+results/r610_2026-11-18_lambda_rows.json). The full-suite cross-check
+(scripts/run_study.py, fresh records:
+results/r610_2026-11-18_full_suite.json) scores 26 MATCHES / 3
+DIVERGES / 1 UNSUPPORTED against the committed 24 / 3 / 3, and the
+only rows that move are L-02 and L-03 (UNSUPPORTED to MATCHES); every
+other row, including S3-12 (UNSUPPORTED for a non-Docker reason),
+reproduces its committed verdict exactly. The committed
+results/scores.json was restored byte-identical after the runs (md5
+eb8bbfcfa5e20c61ebead580059e1be2). Reading: the two Lambda invocation
+behaviours were never departures from the documented boto3 behaviour;
+they were unmeasurable without a container runtime, and on one they
+match. Any restatement in RESULTS.md or the paper is a separate,
+labelled decision.

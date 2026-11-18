@@ -1,0 +1,68 @@
+[
+ {
+  "id": "L-02",
+  "service": "lambda",
+  "assertions": [
+   {
+    "name": "invoke http status",
+    "expected": "200",
+    "observed": "200",
+    "ok": true
+   },
+   {
+    "name": "no FunctionError",
+    "expected": "None",
+    "observed": "None",
+    "ok": true
+   },
+   {
+    "name": "handler response",
+    "expected": "{'echo': {'probe': 'emulation'}}",
+    "observed": "{'echo': {'probe': 'emulation'}}",
+    "ok": true
+   }
+  ],
+  "notes": [
+   "rerun: 2026-11-18 by scripts/rerun_rows.py; previous record (UNSUPPORTED) kept in results/replaced-records.json"
+  ],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ },
+ {
+  "id": "L-03",
+  "service": "lambda",
+  "assertions": [
+   {
+    "name": "invoke http status",
+    "expected": "200",
+    "observed": "200",
+    "ok": true
+   },
+   {
+    "name": "FunctionError",
+    "expected": "'Handled'",
+    "observed": "'Handled'",
+    "ok": true
+   },
+   {
+    "name": "errorMessage",
+    "expected": "'boom-failure-marker'",
+    "observed": "'boom-failure-marker'",
+    "ok": true
+   },
+   {
+    "name": "errorType names RuntimeError",
+    "expected": "True",
+    "observed": "True",
+    "ok": true
+   }
+  ],
+  "notes": [
+   "rerun: 2026-11-18 by scripts/rerun_rows.py; previous record (UNSUPPORTED) kept in results/replaced-records.json"
+  ],
+  "unsupported_text": null,
+  "harness_error": null,
+  "status": "MATCHES"
+ }
+]
